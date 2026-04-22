@@ -1,0 +1,48 @@
+services:
+    mysql:
+        image: 'mysql:8.0'
+        working_dir: /app
+        volumes:
+            - '.:/app'
+        environment:
+            - MYSQL_ROOT_PASSWORD=123123
+            - MYSQL_DATABASE=abelohost_test
+            - MYSQL_USER=user
+            - MYSQL_PASSWORD=123123
+        ports:
+            - '33060:3306'
+
+    webserver:
+        image: 'nginx:alpine'
+        working_dir: /app
+        volumes:
+            - '.:/app'
+            - './.docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf'
+        ports:
+            - '8000:80'
+        depends_on:
+            - php-fpm
+
+    php-fpm:
+        build: .docker/php-fpm
+        working_dir: /app
+        volumes:
+            - '.:/app'
+            - './.docker/php-fpm/php-ini-overrides.ini:/etc/php/8.2/fpm/conf.d/99-overrides.ini'
+            - './.docker/app/db.php:/app/config/db.php'
+        environment:
+            - PHP_IDE_CONFIG=serverName=abelohost_test.local
+            - 'COMPOSER_AUTH={"github.com": "dbd6c5966b80f1379ad6c341fef220b8206ae985"}'
+        ports:
+            - '8080:8080'
+        depends_on:
+            - mysql
+
+    sass:
+        image: node:current-alpine
+        volumes:
+            - '.:/app'
+        working_dir: /app
+        command: >
+            sh -c "npm install -g sass &&
+                   sass --watch --poll public/scss:public/css"
