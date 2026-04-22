@@ -80,15 +80,20 @@ class Category extends Model
      * @param int $perPage
      * @return array
      */
-    public static function getArticles(int $id, int $page = 1, int $perPage): array
+    public static function getArticles(int $id, int $page = 1, int $perPage, string $sort = 'date'): array
     {
         $offset = ($page - 1) * $perPage;
+        $orderBy = match ($sort) {
+            'views' => 'p.views DESC',
+            'date' => 'p.date DESC',
+            default => 'p.date DESC',
+        };
         $stmt = self::db()->prepare('
             SELECT p.*
             FROM ' . Article::table() . ' p
             JOIN ' . ArticleCategory::table() . ' pc ON pc.article_id = p.id
             WHERE pc.category_id = :category_id
-            ORDER BY p.date DESC
+            ORDER BY ' . $orderBy . '
             LIMIT ' . $perPage . ' OFFSET ' . $offset
         );
 

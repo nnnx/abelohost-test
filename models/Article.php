@@ -55,7 +55,7 @@ class Article extends Model
      * @param int $limit
      * @return array
      */
-    public static function getSimilarArticles(int $id, int $limit = 5): array
+    public static function getSimilarArticles(int $id, int $limit = 3): array
     {
         $stmt = self::db()->prepare('
             SELECT DISTINCT p.*

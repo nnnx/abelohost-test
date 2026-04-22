@@ -59,6 +59,24 @@ header {
     flex-wrap: wrap;
     gap: 20px;
   }
+
+  &__sort {
+    margin-bottom: 20px;
+
+    a {
+      display: inline-block;
+      border-radius: 8px;
+      padding: 8px 14px;
+      background: #fff;
+      color: #333;
+
+      &.active {
+        background: #2f4f5a;
+        color: #fff;
+        text-decoration: none;
+      }
+    }
+  }
 }
 
 .card {
@@ -111,6 +129,13 @@ header {
     &:hover {
       text-decoration: underline;
     }
+  }
+
+  .views {
+    margin: 0 15px 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
   }
 }
 

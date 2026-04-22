@@ -27,7 +27,8 @@ class CategoryController extends Controller
             $this->error('Page not found', 404);
         }
         $perPage = 3;
-        $articles = Category::getArticles($id, $currentPage, $perPage);
+        $sort = $_GET['sort'] ?? 'date';
+        $articles = Category::getArticles($id, $currentPage, $perPage, $sort);
         if (empty($articles)) {
             $this->error('Page not found', 404);
         }
@@ -38,6 +39,7 @@ class CategoryController extends Controller
             'articles' => $articles,
             'currentPage' => $currentPage,
             'totalPages' => ceil($total / $perPage),
+            'sort' => $sort,
         ]);
     }
 }
